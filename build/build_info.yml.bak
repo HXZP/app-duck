@@ -1,0 +1,4 @@
+west:
+  command: /home/hxzp/duck-workspace/.venv/bin/west build --board hxzp_main
+  topdir: /home/hxzp/duck-workspace
+  version: 1.4.0

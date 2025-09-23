@@ -1,0 +1,31 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug with JLink",
+            "cwd": "${workspaceFolder}",
+            "executable": "build/zephyr/zephyr.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "jlink",
+            "device": "STM32F103VE",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "showDevDebugOutput": "raw", // 改为 raw 以获取更多调试信息
+            "svdFile": "${workspaceFolder}/../zephyr-hxzp/boards/hxzp_main/support/STM32F103.svd",
+            "gdbPath": "/usr/bin/gdb-multiarch",
+            "rttConfig": {
+                "enabled": true,
+                "address": "auto",
+                "rtt_start_retry": 1000,
+                "decoders": [
+                    {
+                        "port": 0,
+                        "type": "console"
+                    }
+                ]
+            },            
+        },
+    ]
+}
+

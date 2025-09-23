@@ -1,0 +1,48 @@
+menu "zephyr-hxzp (/home/hxzp/duck-workspace/zephyr-hxzp)"
+osource "/home/hxzp/duck-workspace/zephyr-hxzp/Kconfig"
+config ZEPHYR_ZEPHYR_HXZP_MODULE
+	bool
+	default y
+endmenu
+menu "cmsis (/home/hxzp/duck-workspace/zephyr-sdk/modules/hal/cmsis)"
+osource "$(ZEPHYR_CMSIS_KCONFIG)"
+config ZEPHYR_CMSIS_MODULE
+	bool
+	default y
+endmenu
+menu "cmsis-dsp (/home/hxzp/duck-workspace/zephyr-sdk/modules/lib/cmsis-dsp)"
+osource "$(ZEPHYR_CMSIS_DSP_KCONFIG)"
+config ZEPHYR_CMSIS_DSP_MODULE
+	bool
+	default y
+endmenu
+menu "cmsis-nn (/home/hxzp/duck-workspace/zephyr-sdk/modules/lib/cmsis-nn)"
+osource "$(ZEPHYR_CMSIS_NN_KCONFIG)"
+config ZEPHYR_CMSIS_NN_MODULE
+	bool
+	default y
+endmenu
+menu "cmsis_6 (/home/hxzp/duck-workspace/zephyr-sdk/modules/hal/cmsis_6)"
+osource "$(ZEPHYR_CMSIS_6_KCONFIG)"
+config ZEPHYR_CMSIS_6_MODULE
+	bool
+	default y
+endmenu
+menu "hal_st (/home/hxzp/duck-workspace/zephyr-sdk/modules/hal/st)"
+osource "$(ZEPHYR_HAL_ST_KCONFIG)"
+config ZEPHYR_HAL_ST_MODULE
+	bool
+	default y
+endmenu
+config ZEPHYR_HAL_STM32_MODULE
+	bool
+	default y
+
+config ZEPHYR_HAL_STM32_MODULE_BLOBS
+	bool
+menu "segger (/home/hxzp/duck-workspace/zephyr-sdk/modules/debug/segger)"
+osource "$(ZEPHYR_SEGGER_KCONFIG)"
+config ZEPHYR_SEGGER_MODULE
+	bool
+	default y
+endmenu

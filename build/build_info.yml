@@ -1,0 +1,52 @@
+cmake:
+  application:
+    configuration-dir: '/home/hxzp/duck-workspace/app'
+    source-dir: '/home/hxzp/duck-workspace/app'
+  board:
+    name: 'hxzp_main'
+    path:
+     - '/home/hxzp/duck-workspace/zephyr-hxzp/boards/hxzp_main'
+    qualifiers: 'stm32f103xe'
+    revision: ''
+  devicetree:
+    bindings-dirs:
+     - '/home/hxzp/duck-workspace/zephyr-sdk/zephyr/dts/bindings'
+    files:
+     - '/home/hxzp/duck-workspace/zephyr-hxzp/boards/hxzp_main/hxzp_main.dts'
+     - '/home/hxzp/duck-workspace/app/hxzp_main.overlay'
+    include-dirs:
+     - '/home/hxzp/duck-workspace/zephyr-hxzp/include'
+     - '/home/hxzp/duck-workspace/zephyr-sdk/modules/hal/stm32/dts'
+     - '/home/hxzp/duck-workspace/zephyr-sdk/zephyr/include'
+     - '/home/hxzp/duck-workspace/zephyr-sdk/zephyr/include/zephyr'
+     - '/home/hxzp/duck-workspace/zephyr-sdk/zephyr/dts/common'
+     - '/home/hxzp/duck-workspace/zephyr-sdk/zephyr/dts/vendor'
+     - '/home/hxzp/duck-workspace/zephyr-sdk/zephyr/dts/rx'
+     - '/home/hxzp/duck-workspace/zephyr-sdk/zephyr/dts/x86'
+     - '/home/hxzp/duck-workspace/zephyr-sdk/zephyr/dts/xtensa'
+     - '/home/hxzp/duck-workspace/zephyr-sdk/zephyr/dts/sparc'
+     - '/home/hxzp/duck-workspace/zephyr-sdk/zephyr/dts/riscv'
+     - '/home/hxzp/duck-workspace/zephyr-sdk/zephyr/dts/posix'
+     - '/home/hxzp/duck-workspace/zephyr-sdk/zephyr/dts/arm64'
+     - '/home/hxzp/duck-workspace/zephyr-sdk/zephyr/dts/arm'
+     - '/home/hxzp/duck-workspace/zephyr-sdk/zephyr/dts/arc'
+     - '/home/hxzp/duck-workspace/zephyr-sdk/zephyr/dts'
+    user-files:
+     - '/home/hxzp/duck-workspace/app/hxzp_main.overlay'
+  kconfig:
+    files:
+     - '/home/hxzp/duck-workspace/zephyr-hxzp/boards/hxzp_main/hxzp_main_defconfig'
+     - '/home/hxzp/duck-workspace/app/prj.conf'
+    user-files:
+     - '/home/hxzp/duck-workspace/app/prj.conf'
+  toolchain:
+    name: 'zephyr'
+    path: '/home/hxzp/duck-workspace/zephyr-sdk/toolchain'
+  zephyr:
+    version: '4.2.0'
+    zephyr-base: '/home/hxzp/duck-workspace/zephyr-sdk/zephyr'
+version: '0.1.0'
+west:
+  command: '/home/hxzp/duck-workspace/.venv/bin/west build --board hxzp_main'
+  topdir: '/home/hxzp/duck-workspace'
+  version: '1.4.0'

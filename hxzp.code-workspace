@@ -1,0 +1,75 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"cmake.preferredGenerators": [
+			"Ninja",
+			"Unix Makefiles"
+		],
+		"kconfig.zephyr.base": "${workspaceFolder}/../../zephyr-sdk/zephyr",
+		"devicetree.zephyr": "${workspaceFolder}/../../zephyr-sdk/zephyr",
+		"devicetree.modules": [
+			"${workspaceFolder}/../../zephyr",
+			"${workspaceFolder}/../../zephyr-sdk/zephyr",
+			"${workspaceFolder}/../../zephyr-sdk/modules/*/*"
+		],
+		"files.associations": {
+			"cerrno": "cpp",
+			"climits": "cpp",
+			"cmath": "cpp",
+			"cstdarg": "cpp",
+			"cstdio": "cpp",
+			"cstdlib": "cpp",
+			"limits": "cpp",
+			"new": "cpp",
+			"type_traits": "cpp",
+			"typeinfo": "cpp",
+			"compare": "cpp",
+			"cstdint": "cpp"
+		}
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "West: Build",
+				"type": "shell",
+				"command": "rm -r build; west build --board hxzp_main",
+				"group": {
+					"kind": "build",
+					"isDefault": true
+				}
+			},
+			{
+				"label": "jlink flash",
+				"type": "shell",
+				"command": "JLinkExe -ip 127.0.0.1 -autoconnect 1  -CommanderScript scripts/jlink/flash.jlink",
+				"group": {
+					"kind": "build",
+					//"isDefault": true 
+				}
+			},			
+			{
+				"label": "West: Debugserver (OpenOCD)",
+				"type": "shell",
+				"command": "west debugserver",
+				"args": [
+					"-d ${workspaceFolder}",
+					"-r openocd"
+				]
+			},
+			{
+				"label": "West: Debugserver (JLink)",
+				"type": "shell",
+				"command": "west debugserver",
+				"args": [
+					"-d ${workspaceFolder}",
+					"-r jlink"
+				]
+			}
+		]
+	}
+}
