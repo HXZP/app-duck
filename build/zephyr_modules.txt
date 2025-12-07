@@ -1,8 +1,0 @@
-"zephyr-hxzp":"/home/hxzp/duck-workspace/zephyr-hxzp":"/home/hxzp/duck-workspace/zephyr-hxzp"
-"cmsis":"/home/hxzp/duck-workspace/zephyr-sdk/modules/hal/cmsis":"${ZEPHYR_CMSIS_CMAKE_DIR}"
-"cmsis-dsp":"/home/hxzp/duck-workspace/zephyr-sdk/modules/lib/cmsis-dsp":"${ZEPHYR_CMSIS_DSP_CMAKE_DIR}"
-"cmsis-nn":"/home/hxzp/duck-workspace/zephyr-sdk/modules/lib/cmsis-nn":"${ZEPHYR_CMSIS_NN_CMAKE_DIR}"
-"cmsis_6":"/home/hxzp/duck-workspace/zephyr-sdk/modules/hal/cmsis_6":"${ZEPHYR_CMSIS_6_CMAKE_DIR}"
-"hal_st":"/home/hxzp/duck-workspace/zephyr-sdk/modules/hal/st":"/home/hxzp/duck-workspace/zephyr-sdk/modules/hal/st"
-"hal_stm32":"/home/hxzp/duck-workspace/zephyr-sdk/modules/hal/stm32":"/home/hxzp/duck-workspace/zephyr-sdk/modules/hal/stm32"
-"segger":"/home/hxzp/duck-workspace/zephyr-sdk/modules/debug/segger":"${ZEPHYR_SEGGER_CMAKE_DIR}"

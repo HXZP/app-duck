@@ -11,7 +11,7 @@ file(GLOB_RECURSE APP_SOURCES CONFIGURE_DEPENDS
     "src/*.cpp"
 )
 
-list(FILTER APP_SOURCES EXCLUDE REGEX "src/key.cpp")
+# list(FILTER APP_SOURCES EXCLUDE REGEX "src/key.cpp")
 
 target_sources(app PRIVATE
     ${APP_SOURCES})

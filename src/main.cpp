@@ -1,109 +1,79 @@
+/* 文件：main.c */
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
 #include <zephyr/devicetree.h>
-#include <zephyr/drivers/display.h>
-#include <zephyr/sys/mem_manage.h>
-#include <zephyr/drivers/gpio.h>
+#include <zephyr/logging/log.h>
+#include <zephyr/drivers/can.h>
+#include <zephyr/input/input.h>
+
 #include "led.h"
-// #include "key.h"
+#include "key.h"
+#include "lcd.h"
 
-#define LCD_NODE DT_NODELABEL(lcd)
-const struct device *display_dev = DEVICE_DT_GET(LCD_NODE);
-#define LCD_LED_NODE DT_NODELABEL(lcd_led)
-static const struct gpio_dt_spec lcd_led = GPIO_DT_SPEC_GET(LCD_LED_NODE, gpios);
-void st7789v_demo(void)
-{
-	if (!device_is_ready(display_dev)) {
-		printk("ST7789V device not ready!\n");
-		return;
-	}
-	if (!gpio_is_ready_dt(&lcd_led)) {
-		printk("lcd_led device is not ready\n");
-		return;
-	}
-	gpio_pin_configure_dt(&lcd_led, GPIO_OUTPUT_ACTIVE);
-	// 清屏为黑色
-	display_blanking_off(display_dev);
 
-	struct display_buffer_descriptor desc;
-	uint16_t width = 135;
-	uint16_t height = 100;
-	uint16_t color = 0xF800; // 红色，RGB565
+LOG_MODULE_REGISTER(main, LOG_LEVEL_INF);
 
-	// 填充一块红色区域
-	desc.width = width;
-	desc.height = height;
-	desc.pitch = width;
-	desc.buf_size = width * height * 2;
+const struct device *const can_dev = DEVICE_DT_GET(DT_NODELABEL(can1));
 
-	// 分配缓冲区
-	uint8_t *buf = (uint8_t *)k_malloc(desc.buf_size);
-	if (!buf) {
-		printk("No memory for display buffer!\n");
-		return;
-	}
-
-	// 填充红色
-	for (int i = 0; i < width * height; i++) {
-		buf[2 * i] = color >> 8;
-		buf[2 * i + 1] = color & 0xFF;
-	}
-
-	// 显示缓冲区
-	display_write(display_dev, 0, 0, &desc, buf);
-
-	k_free(buf);
-	printk("ST7789V demo finished!\n");
+/* CAN 接收回调函数 */
+static void can_rx_callback(const struct device *dev, struct can_frame *frame, void *user_data) {
+    LOG_INF("rx ID: 0x%x, len: %d", frame->id, frame->dlc);
+    for (int i = 0; i < frame->dlc; i++) {
+        LOG_INF("data[%d]: 0x%x", i, frame->data[i]);
+    }
 }
 
-void lcd_fresh(uint16_t color)
-{
-	uint16_t width = 135;
-	uint16_t height = 100;
+int main() {
 
-	struct display_buffer_descriptor desc;
-	desc.width = width;
-	desc.height = height;
-	desc.pitch = width;
-	desc.buf_size = width * height * 2;
-	// 分配缓冲区
-	uint8_t *buf = (uint8_t *)k_malloc(desc.buf_size);
-	if (!buf) {
-		printk("No memory for display buffer!\n");
-		return;
-	}
 
-	// 填充红色
-	for (int i = 0; i < width * height; i++) {
-		buf[2 * i] = color >> 8;
-		buf[2 * i + 1] = color & 0xFF;
-	}
+	led_init();
+	// key_init();
+	lcd_init();
 
-	// 显示缓冲区
-	display_write(display_dev, 0, 0, &desc, buf);
+    /* 1. 检查CAN设备是否就绪 */
+    if (!device_is_ready(can_dev)) {
+        return 0;
+    }
 
-	k_free(buf);
-}
+    /* 2. 配置CAN位时序（1Mbps示例，基于36MHz APB1时钟） */
+    struct can_timing timing;
+    timing.sjw = CAN_SJW_1TQ;
+    timing.prop_seg = 0;
+    timing.phase_seg1 = 6;  // 对于1Mbps，APB1=36MHz
+    timing.phase_seg2 = 2;
+    timing.prescaler = 3;
 
-int main()
-{
-	uint16_t color = 0;
-	int ret = led_init();
-	if (ret != 0) {
-		printk("Failed to initialize LEDs: %d\n", ret);
-		return ret;
-	}
+    can_set_timing(can_dev, &timing);
+    can_set_mode(can_dev, CAN_MODE_LOOPBACK); // CAN_MODE_NORMAL
+    can_start(can_dev);
 
-	printk("main thread started.\n");
-	st7789v_demo();
-	
-	while (true) 
-	{
-		color++;
-		if (color > 0xFFFF)
-			color = 0;
+    /* 3. 设置CAN接收过滤器（匹配所有标准帧） */
+    struct can_filter filter = {
+        .id = 0,
+        .mask = 0,
+        .flags = 0,
+    };
+    can_add_rx_filter(can_dev, can_rx_callback, NULL, &filter);
 
-		lcd_fresh(color); // 红色
-		k_msleep(100);
-	}
+    /* 4. 定义要发送的CAN帧 */
+    struct can_frame frame = {
+        .id = 0x201,
+        .dlc = 4,
+        .flags = 0,
+        .data = {0x01, 0x02, 0x03, 0x04}
+    };
+
+    LOG_INF("main thread started.");
+    while (1) {
+        /* 循环递增帧ID */
+        if (frame.id < 0x300) {
+            frame.id++;
+        } else {
+            frame.id = 0x201;
+        }
+
+        /* 发送CAN帧 */
+        can_send(can_dev, &frame, K_NO_WAIT, NULL, NULL);
+        k_msleep(1000);
+    }
 }

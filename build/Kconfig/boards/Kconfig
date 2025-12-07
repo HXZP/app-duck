@@ -1,2 +1,0 @@
-# Load Zephyr board Kconfig descriptions.
-osource "/home/hxzp/duck-workspace/zephyr-hxzp/boards/hxzp_main/Kconfig"
