@@ -37,14 +37,26 @@ int main() {
 
     /* 2. 配置CAN位时序（1Mbps示例，基于36MHz APB1时钟） */
     struct can_timing timing;
-    timing.sjw = CAN_SJW_1TQ;
+    timing.sjw = 1;//CAN_SJW_1TQ这个参数是错误的，实际值是0，不在最小和最大值的范围内
     timing.prop_seg = 0;
     timing.phase_seg1 = 6;  // 对于1Mbps，APB1=36MHz
     timing.phase_seg2 = 2;
-    timing.prescaler = 3;
+    timing.prescaler = 8;
+    
+	// const struct can_timing *min = can_get_timing_min(can_dev);
+	// const struct can_timing *max = can_get_timing_max(can_dev);
+    // LOG_INF("CAN timing: sjw=%d, prop_seg=%d, phase_seg1=%d, phase_seg2=%d, prescaler=%d",
+    //     min->sjw, min->prop_seg, min->phase_seg1, min->phase_seg2, min->prescaler);
 
-    can_set_timing(can_dev, &timing);
-    can_set_mode(can_dev, CAN_MODE_LOOPBACK); // CAN_MODE_NORMAL
+    // LOG_INF("CAN timing: sjw=%d, prop_seg=%d, phase_seg1=%d, phase_seg2=%d, prescaler=%d",
+    //     max->sjw, max->prop_seg, max->phase_seg1, max->phase_seg2, max->prescaler);
+
+    int ret = can_set_timing(can_dev, &timing);
+    if(ret)
+    {
+        LOG_ERR("can_set_timing failed, %d",ret);
+    }
+    can_set_mode(can_dev, CAN_MODE_NORMAL); // CAN_MODE_NORMAL
     can_start(can_dev);
 
     /* 3. 设置CAN接收过滤器（匹配所有标准帧） */
